@@ -28,13 +28,20 @@ public class BillingServiceApplication{
 				InventoryServiceClient inventoryServiceClient,
 				CustomerServiceClient customerServiceClient){
 		return args->{
-				Bill bill=new Bill();
+			Bill bill=new Bill();
 			bill.setBillingDate(new Date() );
 			customer Customer=customerServiceClient.findCustomerById(1L);
+			Customer.setId(1L);
+			System.out.println(Customer);
 			bill.setCustomerId(Customer.getId());
 			billRepository.save(bill);
 			inventoryServiceClient.findAll().getContent().forEach(p->{
-					productItemRepository.save(new ProductItem(null,null,p.getId(),p.getPrice(),(int)(1+Math.random()*1000),bill));
+				productItemRepository.save(new ProductItem(null,null,p.getId(),p.getPrice(),(int)(1+Math.random()*1000),bill));
+
 				});
-			};
-	}}
+			productItemRepository.findAll().forEach(System.out::println);
+
+		};
+
+	}
+}
